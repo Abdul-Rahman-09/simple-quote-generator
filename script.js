@@ -8,9 +8,11 @@ const quoteText = document.getElementById("quote");
 const authorText = document.getElementById("author");
 const twitterBtn = document.getElementById("twitter");
 const newQuoteBtn = document.getElementById("new-quote");
+const loader = document.getElementById("loader");
 
 // Test quotes
 const quote = () => {
+  showLoadingSpinner();
   const random = Math.floor(Math.random() * retrievedQuotes.length);
   singleQuote = retrievedQuotes[random];
 
@@ -33,10 +35,14 @@ const quote = () => {
     quoteText.classList.remove("long-quote");
   }
   quoteText.innerText = singleQuote.text;
+
+  // Hide loading animation
+  hideLoadingSpinner();
 };
 
 // Fetch quotes from API
 async function getQuotes() {
+  showLoadingSpinner();
   const apiUrl = "https://type.fit/api/quotes";
   try {
     const response = await fetch(apiUrl);
@@ -45,6 +51,20 @@ async function getQuotes() {
   } catch (error) {
     console.log(error);
     retrievedQuotes = islamicQuotes; // Fallback to local quotes if fetching fails
+  }
+}
+
+// Show loading animation
+function showLoadingSpinner() {
+  loader.hidden = false;
+  quoteContainer.hidden = true;
+}
+
+// Hide loading animation
+function hideLoadingSpinner() {
+  if (!loader.hidden) {
+    quoteContainer.hidden = false;
+    loader.hidden = true;
   }
 }
 
