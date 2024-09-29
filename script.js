@@ -54,7 +54,13 @@ async function init() {
   quote();
 }
 
-// Event listener for new quote button
+//Tweet
+const tweetQuote = () => {
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${singleQuote.text}\n --${singleQuote.author}`;
+  window.open(twitterUrl, "_blank");
+};
+// Event listener for quote buttons
+twitterBtn.addEventListener("click", tweetQuote);
 newQuoteBtn.addEventListener("click", quote);
 
 init();
