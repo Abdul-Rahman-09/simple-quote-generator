@@ -10,47 +10,47 @@ const twitterBtn = document.getElementById("twitter");
 const newQuoteBtn = document.getElementById("new-quote");
 const loader = document.getElementById("loader");
 
-// Test quotes
+// Fetch a new quote
 const quote = () => {
   showLoadingSpinner();
   const random = Math.floor(Math.random() * retrievedQuotes.length);
   singleQuote = retrievedQuotes[random];
 
   // Set the author text
-  if (!singleQuote.author) {
+  if (!singleQuote.a) {
     authorText.innerText = "Unknown";
   } else {
-    if (singleQuote.author.length > 20) {
+    if (singleQuote.a.length > 20) {
       authorText.classList.add("long-author-name");
     } else {
       authorText.classList.remove("long-author-name");
     }
-    authorText.innerText = singleQuote.author;
+    authorText.innerText = singleQuote.a; // ZenQuotes uses 'a' for author
   }
 
   // Set the quote text
-  if (singleQuote.text.length > 50) {
+  if (singleQuote.q.length > 50) {
     quoteText.classList.add("long-quote");
   } else {
     quoteText.classList.remove("long-quote");
   }
-  quoteText.innerText = singleQuote.text;
+  quoteText.innerText = singleQuote.q; // ZenQuotes uses 'q' for quote
 
   // Hide loading animation
   hideLoadingSpinner();
 };
 
-// Fetch quotes from API
+// Fetch quotes from ZenQuotes API
 async function getQuotes() {
-  showLoadingSpinner();
-  const apiUrl = "https://type.fit/api/quotes";
+  const proxyUrl = "https://api.allorigins.win/raw?url="; // CORS Proxy
+  const apiUrl = "https://zenquotes.io/api/quotes";
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
     const data = await response.json();
     retrievedQuotes = data;
+    // console.log("Retrieved quotes:", retrievedQuotes);
   } catch (error) {
-    console.log(error);
-    retrievedQuotes = islamicQuotes; // Fallback to local quotes if fetching fails
+    console.log("Whoops no quotes fetched", error);
   }
 }
 
@@ -76,11 +76,13 @@ async function init() {
 
 //Tweet
 const tweetQuote = () => {
-  const twitterUrl = `https://twitter.com/intent/tweet?text=${singleQuote.text}\n --${singleQuote.author}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${singleQuote.q}\n --${singleQuote.a}`;
   window.open(twitterUrl, "_blank");
 };
-// Event listener for quote buttons
+
+// Event listeners
 twitterBtn.addEventListener("click", tweetQuote);
 newQuoteBtn.addEventListener("click", quote);
 
+// Initialize
 init();
