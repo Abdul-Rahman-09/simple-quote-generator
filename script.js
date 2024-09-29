@@ -50,6 +50,7 @@ async function getQuotes() {
     retrievedQuotes = data;
     // console.log("Retrieved quotes:", retrievedQuotes);
   } catch (error) {
+    getQuotes();
     console.log("Whoops no quotes fetched", error);
   }
 }
